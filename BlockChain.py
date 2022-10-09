@@ -3,11 +3,12 @@ import time
 import sqlite3
 import json
 
-from Block import Block, buildTree
+from Block import Block, buildTree, validate_transactions
 from Transaction import Transaction
 
+
 def genesis_block():
-    return Block(0, {"starter": "yes"}, [], time.time(), 0, 100)
+    return Block(0, {"starter": "yes"}, None, [], time.time(), 0, 100)
 
 
 class BlockChain:
@@ -30,8 +31,10 @@ class BlockChain:
             raise Exception("Transaction has faulty signature! ")
 
     def add_block(self):
-        new_block = Block(len(self.block_chain), self.pending_transaction, buildTree(self.pending_transaction), time.time(),
+        (merkel_tree_root, merkel_tree) = buildTree(self.pending_transaction)
+        new_block = Block(len(self.block_chain), self.pending_transaction, merkel_tree, merkel_tree_root, time.time(),
                           self.get_latest_block().hash, self.proof_of_work(self.get_last_proof()))
+        validate_transactions(self.pending_transaction, new_block.merkelTree)
         self.block_chain.append(new_block)
 
     def get_first_proof(self):

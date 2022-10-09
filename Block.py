@@ -14,10 +14,11 @@ def calculate_hash(index, previous_hash, timestamp, data):
 
 class Block:
 
-    def __init__(self, index, transaction_list, merkelTreeRoot, timestamp, previous_hash, proof):
+    def __init__(self, index, transaction_list, merkelTree, merkelTreeRoot, timestamp, previous_hash, proof):
         self.index = index
         self.timestamp = timestamp
         self.transaction_list = transaction_list
+        self.merkelTree = merkelTree
         self.merkelTreeRoot = merkelTreeRoot
         self.previous_hash = previous_hash
         self.hash = calculate_hash(index, timestamp, merkelTreeRoot, previous_hash)
@@ -47,4 +48,14 @@ def buildTree(transactions: list[Transaction]):
         mt.add_leaf(t.toJson(), True)
         print(t)
     mt.make_tree()
-    return mt.get_merkle_root()
+    return mt.get_merkle_root(), mt
+
+
+def validate_transactions(transactions: list[Transaction], mt: MerkleTools):
+    hash_function = mt.hash_function
+    for t in transactions:
+        v = t.toJson().encode('utf-8')
+        v = hash_function(v).hexdigest()
+        v = bytearray.fromhex(v)
+        if v not in mt.leaves:
+            raise Exception("Invalid transaction in the list")
