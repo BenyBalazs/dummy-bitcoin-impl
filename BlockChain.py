@@ -36,6 +36,7 @@ class BlockChain:
                           self.get_latest_block().hash, self.proof_of_work(self.get_last_proof()))
         validate_transactions(self.pending_transaction, new_block.merkelTree)
         self.block_chain.append(new_block)
+        self.pending_transaction = []
 
     def get_first_proof(self):
         return self.block_chain[0].proof
