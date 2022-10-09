@@ -26,6 +26,12 @@ transaction_2_data = {
     "amount": 50
 }
 
+transaction_7_data = {
+    "from": user2.name,
+    "to": user1.name,
+    "amount": 70
+}
+
 transaction1 = Transaction(transaction_1_data)
 transaction1.sender_signature = user1.sign(transaction1)
 transaction1.user_to_signature = user2.sign(transaction1)
@@ -34,8 +40,27 @@ transaction2 = Transaction(transaction_2_data)
 transaction2.sender_signature = user1.sign(transaction2)
 transaction2.user_to_signature = user2.sign(transaction2)
 
+transaction3 = Transaction(transaction_2_data)
+transaction3.sender_signature = user1.sign(transaction2)
+transaction3.user_to_signature = user2.sign(transaction2)
+
+transaction4 = Transaction(transaction_7_data)
+transaction4.sender_signature = user1.sign(transaction2)
+transaction4.user_to_signature = user2.sign(transaction2)
+
+transaction5 = Transaction(transaction_2_data)
+transaction5.sender_signature = user1.sign(transaction2)
+transaction5.user_to_signature = user2.sign(transaction2)
+
+transaction6 = Transaction(transaction_2_data)
+transaction6.sender_signature = user1.sign(transaction2)
+transaction6.user_to_signature = user2.sign(transaction2)
+
 block_chain.new_transaction(transaction1)
 block_chain.new_transaction(transaction2)
+block_chain.new_transaction(transaction3)
+block_chain.new_transaction(transaction4)
+block_chain.new_transaction(transaction6)
 
 block_chain.add_block()
 
