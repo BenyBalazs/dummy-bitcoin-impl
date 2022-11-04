@@ -25,7 +25,7 @@ class BlockChain:
         return self.get_latest_block().proof
 
     def new_transaction(self, transaction: Transaction):
-        if transaction.user_to_signature and transaction.sender_signature:
+        if transaction.sender_signature:
             self.pending_transaction.append(transaction)
         else:
             raise Exception("Transaction has faulty signature! ")
@@ -33,7 +33,8 @@ class BlockChain:
     def add_block(self):
         (merkel_tree_root, merkel_tree) = buildTree(self.pending_transaction)
         new_block = Block(len(self.block_chain), self.pending_transaction, merkel_tree, merkel_tree_root, time.time(),
-                          self.get_latest_block().hash, self.proof_of_work(self.get_last_proof()))
+                          self.get_latest_block().hash)
+        new_block.proof = self.proof_of_work(new_block.to_json_no_proof())
         validate_transactions(self.pending_transaction, new_block.merkelTree)
         self.block_chain.append(new_block)
         self.pending_transaction = []

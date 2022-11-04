@@ -14,7 +14,7 @@ def calculate_hash(index, previous_hash, timestamp, data):
 
 class Block:
 
-    def __init__(self, index, transaction_list, merkelTree, merkelTreeRoot, timestamp, previous_hash, proof):
+    def __init__(self, index, transaction_list, merkelTree, merkelTreeRoot, timestamp, previous_hash, proof=None):
         self.index = index
         self.timestamp = timestamp
         self.transaction_list = transaction_list
@@ -38,6 +38,17 @@ class Block:
                 "previous_hash": self.previous_hash,
                 "hash": self.hash,
                 "proof": self.proof,
+            }
+        )
+
+    def to_json_no_proof(self):
+        return json.dumps(
+            {
+                "index": self.index,
+                "timestamp": self.timestamp,
+                "merkelTreeRoot": self.merkelTreeRoot,
+                "previous_hash": self.previous_hash,
+                "hash": self.hash
             }
         )
 
